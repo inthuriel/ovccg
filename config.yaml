@@ -1,0 +1,53 @@
+# address of VPN server
+# default: string
+# if set to list, multiple commented lines of 'server' entry will be generated
+server: 127.0.0.1
+
+# port of VPN
+# default 1194
+#port:
+
+# connection type
+# default: TCP
+#proto:
+
+# device type
+# default: tap
+#dev:
+
+# client verbosity
+# default: 3
+#verb:
+
+# redirect gateway
+# default: unset
+#redirect-gateway:
+
+# path to certificate used to sign clients
+# default: /etc/openvpn/certs/ca.crt
+#ca_cert_path:
+
+# path to key used to sign clients
+# default: /etc/openvpn/certs/ca.key
+#ca_key_path:
+
+# path to TLS cert for hardening OPENvpn security
+# if set proper elements to config will be added
+# default: unset
+#tls_path:
+
+# basic data to evoke certificate
+# defaults: C=PL/ST=WLKP/L=Poznan/O=Private/OU=Users and 3649 days of cert valid
+#crt:
+# - country:
+# - province:
+# - city:
+# - org:
+# - ou:
+# - days:
+
+# path to store configs and certs
+# have to be created manually
+# if --output specified path won't be used and only *.ovpn file will be generated
+# default: /etc/openvpn/client
+#save_path:
