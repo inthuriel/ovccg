@@ -9,7 +9,7 @@ sudo pip3 install git+https://github.com/inthuriel/ovccg.git
 ```
 
 ### Configuration
-Configuration file is stored by default in `/etc/openvpn/ovccg/config.yaml` - all variables are described in comments.
+Configuration file is stored by default in `/usr/share/ovccg/config.yaml` - all variables are described in comments.
 
 ### Usage
 ```console

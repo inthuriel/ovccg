@@ -319,7 +319,7 @@ def run():
     parser = argparse.ArgumentParser(description='Script to autogenerate OPENvpn '
                                                  'config alongside with certs')
     parser.add_argument('-c', '--config', help='Path to script config',
-                        default='/etc/openvpn/ovccg/config.yaml')
+                        default='/usr/share/ovccg/config.yaml')
     parser.add_argument('-o', '--output', help='Path to save output [full, inc. filename]')
     args = parser.parse_args()
 
