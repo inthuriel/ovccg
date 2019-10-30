@@ -32,7 +32,7 @@ class OVCCG:
     def __parse_config(path):
         with open(path, 'r') as config_file:
             try:
-                yaml_cfg = yaml.load(config_file)
+                yaml_cfg = yaml.load(config_file, Loader=yaml.FullLoader)
             except yaml.YAMLError as exc:
                 print(exc)
 
@@ -51,18 +51,18 @@ class OVCCG:
         config_lines.append('client')
         config_lines.append('dev {}'.format(self.__config.get('dev', 'tap')))
         config_lines.append('proto {}'.format(self.__config.get('proto', 'tcp')))
-        for position, server in enumerate(self.__config.get('server')):
-            config_lines.append('{active}remote '
-                                '{host} {port}'.format(active='' if position == 0 else '#',
-                                                       host=server,
-                                                       port=self.__config.get('port', 1194)))
+        config_lines.append('remote-random')
+        for _, server in enumerate(self.__config.get('server')):
+            config_lines.append('remote {host} {port}'.format(host=server,
+            port=self.__config.get('port', 1194)))
         config_lines.append('resolv-retry infinite')
         config_lines.append('nobind')
         config_lines.append('comp-lzo')
         config_lines.append('auth-nocache')
         config_lines.append('persist-key')
         config_lines.append('persist-tun')
-        config_lines.append('ns-cert-type server')
+        for line in self.__config.get('extra_vars'):
+            config_lines.append(line)
         config_lines.append('verb {}'.format(self.__config.get('verb', 3)))
         if self.__config.get('tls_path'):
             config_lines.append('key-direction 1')
@@ -104,6 +104,18 @@ class OVCCG:
             password = getpass.getpass(prompt=self.__colours.colorize('[green]Enter cert password, '
                                                                       'leave empty if not needed: '
                                                                       '[/green]'))
+
+        file_name = unidecode.unidecode(re.sub(r'_+', '_',
+                                               re.sub(r'\W', '_', username.strip())
+                                               ).strip('_').lower()).encode('ascii').decode("utf-8")
+
+        return {'username': username, 'email': email, 'password': password, 'file_name': file_name}
+
+    def __collect_onetime_data_from_params(self):
+
+        username = self.__runtime_args.user
+        email = self.__runtime_args.email
+        password = self.__runtime_args.password
 
         file_name = unidecode.unidecode(re.sub(r'_+', '_',
                                                re.sub(r'\W', '_', username.strip())
@@ -237,10 +249,16 @@ class OVCCG:
         Main method of OVCCG class used for run config generation algorithm
         :return: None
         """
-        config = self.__produce_ovpn_config(
-            self.__prepare_ovpn_config_object(
-                self.__prepare_certs(
-                    self.__collect_onetime_data())))
+        if self.__runtime_args.user and self.__runtime_args.email:
+            config = self.__produce_ovpn_config(
+                self.__prepare_ovpn_config_object(
+                    self.__prepare_certs(
+                        self.__collect_onetime_data_from_params())))
+        else:
+            config = self.__produce_ovpn_config(
+                self.__prepare_ovpn_config_object(
+                    self.__prepare_certs(
+                        self.__collect_onetime_data())))
 
         if self.__config_save_path and not self.__runtime_args.output:
             config_save_path = '{base}/{name}/{name}.ovpn'.format(base=self.__config_save_path,
@@ -321,6 +339,9 @@ def run():
     parser.add_argument('-c', '--config', help='Path to script config',
                         default='/usr/share/ovccg/config.yaml')
     parser.add_argument('-o', '--output', help='Path to save output [full, inc. filename]')
+    parser.add_argument('-u', '--user', help='Username for certificate and config')
+    parser.add_argument('-m', '--email', help='Email address of user')
+    parser.add_argument('-p', '--password', help='Password for certificate [optional]')
     args = parser.parse_args()
 
     ovccg = OVCCG(args)
