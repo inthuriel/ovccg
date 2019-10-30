@@ -23,10 +23,10 @@ class PostInstallCommand(install):
 
 setup(
     name="ovccg",
-    version="0.8",
+    version="0.9",
     packages=find_packages(),
     install_requires=[
-        'pyyaml>3.11',
+        'pyyaml=5.1.2',
         'unidecode>1.0'],
     entry_points={
         'console_scripts': [

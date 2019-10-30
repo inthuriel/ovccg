@@ -36,6 +36,10 @@ server: 127.0.0.1
 # default: unset
 #tls_path:
 
+# extra variables passed to vpn client config
+# default: unset
+#extra_vars:
+
 # basic data to evoke certificate
 # defaults: C=PL/ST=WLKP/L=Poznan/O=Private/OU=Users and 3649 days of cert valid
 #crt:
@@ -51,3 +55,4 @@ server: 127.0.0.1
 # if --output specified path won't be used and only *.ovpn file will be generated
 # default: /etc/openvpn/client
 #save_path:
+
